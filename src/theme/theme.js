@@ -1,122 +1,130 @@
 // Jungle Market React Native Design System & Theme Tokens
-// Earthy Artisan Sanctuary palette with Inter typography hierarchy
-// Unified token set used by all screen files
+// Lush Tribal & Earthy Artisan Sanctuary palette with Outfit & Plus Jakarta Sans typography
 
 export const THEME = {
   colors: {
-    // Primary greens
-    primary: "#004525",
-    primaryDark: "#002B16",
-    primaryLight: "#94d4a7",
-    primaryContainer: "#1f5d3a",
-    onPrimary: "#ffffff",
-    onPrimaryContainer: "#94d4a7",
-    primaryFixed: "#b1f1c3",
+    // Primary deep jungle greens
+    primary: "#0A3D2E",
+    primaryDark: "#072B1E",
+    primaryLight: "#186851",
+    primaryContainer: "#0E4C3A",
+    onPrimary: "#FFFFFF",
+    onPrimaryContainer: "#E8F3EE",
+    primaryFixed: "#D1EADB",
 
-    // Secondary / bark browns
-    secondary: "#835331",
-    bark: "#835331",
-    secondaryContainer: "#ffbe94",
-    onSecondary: "#ffffff",
-    onSecondaryContainer: "#7a4b2a",
+    // Secondary warm amber / ochre bark
+    secondary: "#C87A28",
+    bark: "#C87A28",
+    secondaryContainer: "#FDF5E8",
+    onSecondary: "#FFFFFF",
+    onSecondaryContainer: "#8A4E12",
 
-    // Tertiary golds
-    tertiary: "#503700",
-    tertiaryContainer: "#6e4c00",
-    tertiaryAccent: "#c99a45",
+    // Tertiary / gold accents
+    tertiary: "#D97706",
+    tertiaryContainer: "#FEF3C7",
+    tertiaryAccent: "#F59E0B",
+    gold: "#E8A246",
 
-    // Surfaces — Material Design 3 tokens
-    surface: "#eefeed",
-    surfaceDim: "#cfdece",
-    surfaceBright: "#eefeed",
-    surfaceContainerLowest: "#ffffff",
-    surfaceContainerLow: "#e8f8e7",
-    surfaceContainer: "#e3f2e1",
-    surfaceContainerHigh: "#ddecdc",
-    surfaceContainerHighest: "#d7e7d6",
+    // Surfaces & Parchment background
+    surface: "#FAF7EE",
+    surfaceDim: "#F2EDE0",
+    surfaceBright: "#FFFFFF",
+    surfaceContainerLowest: "#FFFFFF",
+    surfaceContainerLow: "#FAF7EE",
+    surfaceContainer: "#F4EFE2",
+    surfaceContainerHigh: "#EDE6D4",
+    surfaceContainerHighest: "#E6DEC8",
 
-    // Alias tokens used by App.js and AmbassadorScreens.js
-    surfaceCard: "#ffffff",
-    surfaceWarm: "#FBF9F5",
+    // Alias tokens
+    surfaceCard: "#FFFFFF",
+    surfaceWarm: "#FAF7EE",
 
-    // Background
-    background: "#eefeed",
-    onBackground: "#121e14",
+    // Background & Canvas
+    background: "#FAF7EE",
+    onBackground: "#0A3D2E",
 
     // Text tokens
-    onSurface: "#121e14",
-    textDark: "#121e14",
-    onSurfaceVariant: "#404942",
-    textMuted: "#404942",
+    onSurface: "#0A3D2E",
+    textDark: "#0A3D2E",
+    onSurfaceVariant: "#526259",
+    textMuted: "#6B7D73",
 
-    // Borders
-    outline: "#707971",
-    outlineVariant: "#c0c9bf",
-    border: "#E5E0D8",
-    borderLight: "#F0EDE8",
+    // Borders & strokes
+    outline: "#85968C",
+    outlineVariant: "#D6CEB8",
+    border: "#E6DEC8",
+    borderLight: "#F0EAD8",
 
     // Inverse
-    inverseSurface: "#263428",
-    inverseOnSurface: "#e5f5e4",
-    inversePrimary: "#95d5a8",
+    inverseSurface: "#141E18",
+    inverseOnSurface: "#E8F3EE",
+    inversePrimary: "#10B981",
 
-    // Semantic
-    success: "#1f5d3a",
-    warning: "#b45309",
-    error: "#ba1a1a",
-    errorContainer: "#ffdad6",
-    onErrorContainer: "#93000a",
+    // Semantic colors
+    success: "#059669",
+    warning: "#D97706",
+    error: "#DC2626",
+    errorContainer: "#FEE2E2",
+    onErrorContainer: "#991B1B",
+
+    // Quote & Tribal Banner darks
+    quoteDark: "#1E311A",
+    quoteText: "#D5DFD1",
   },
 
-  // Typography tokens — alias names used by different screen files
+  // Typography tokens with fallback hierarchy
   fonts: {
-    regular: "Inter",
-    medium: "Inter",
-    semibold: "Inter",
-    serif: "Playfair Display",
+    regular: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    medium: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    semibold: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    bold: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
+    display: "'Outfit', sans-serif",
+    serif: "'Fraunces', Georgia, serif",
+    mono: "'Space Grotesk', monospace",
   },
   typography: {
-    fontRegular: "Inter",
-    fontMedium: "Inter",
-    fontSemibold: "Inter",
+    fontRegular: "'Plus Jakarta Sans', -apple-system, sans-serif",
+    fontMedium: "'Plus Jakarta Sans', -apple-system, sans-serif",
+    fontSemibold: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
+    fontDisplay: "'Outfit', sans-serif",
   },
 
-  // Border radius — both naming conventions
+  // Border radius tokens
   borderRadius: {
-    sm: 6,
-    md: 12,
-    lg: 16,
-    xl: 20,
+    sm: 8,
+    md: 14,
+    lg: 20,
+    xl: 28,
     full: 9999,
   },
   radius: {
-    sm: 6,
-    md: 12,
-    lg: 16,
-    xl: 20,
+    sm: 8,
+    md: 14,
+    lg: 20,
+    xl: 28,
     full: 9999,
   },
 
   shadows: {
     sm: {
-      shadowColor: "#121e14",
+      shadowColor: "#0A3D2E",
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.06,
+      shadowOpacity: 0.05,
       shadowRadius: 6,
       elevation: 2,
     },
     md: {
-      shadowColor: "#121e14",
+      shadowColor: "#0A3D2E",
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.1,
-      shadowRadius: 12,
+      shadowOpacity: 0.08,
+      shadowRadius: 14,
       elevation: 4,
     },
     lg: {
-      shadowColor: "#004525",
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.16,
-      shadowRadius: 20,
+      shadowColor: "#0A3D2E",
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.14,
+      shadowRadius: 28,
       elevation: 8,
     },
   },

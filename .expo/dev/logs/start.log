@@ -1031,3 +1031,90 @@
 {"_e":"metro:bundling:progress","_t":1788840513569,"id":"2","progress":0.9170092225794615,"total":802,"current":768}
 {"_e":"metro:bundling:progress","_t":1788840513690,"id":"2","progress":0.999,"total":823,"current":823}
 {"_e":"metro:bundling:done","_t":1788840513825,"id":"2","total":823,"ms":2213.0195}
+{"_e":"root:init","_t":1789030243160,"format":"v0-jsonl","version":"57.0.22"}
+{"_e":"env:mode","_t":1789030243193,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1789030243235,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1789030262684,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1789030287498,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1789030297741,"plugins":[]}
+{"_e":"metro:instantiate","_t":1789030319118,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1789030327016,"id":"1","platform":"web","environment":null,"entry":"src\\index.js"}
+{"_e":"metro:bundling:progress","_t":1789030327019,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789030327043,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789030327145,"id":"1","progress":0.0625,"total":12,"current":3}
+{"_e":"metro:bundling:progress","_t":1789030327256,"id":"1","progress":0.0625,"total":29,"current":5}
+{"_e":"metro:bundling:progress","_t":1789030327353,"id":"1","progress":0.0625,"total":55,"current":9}
+{"_e":"metro:bundling:progress","_t":1789030327473,"id":"1","progress":0.0625,"total":71,"current":17}
+{"_e":"metro:bundling:progress","_t":1789030327575,"id":"1","progress":0.0625,"total":92,"current":22}
+{"_e":"metro:bundling:progress","_t":1789030327677,"id":"1","progress":0.0625,"total":119,"current":28}
+{"_e":"metro:bundling:progress","_t":1789030327784,"id":"1","progress":0.18458161865569273,"total":135,"current":58}
+{"_e":"metro:bundling:progress","_t":1789030327924,"id":"1","progress":0.2060258538302902,"total":141,"current":64}
+{"_e":"metro:bundling:progress","_t":1789030328028,"id":"1","progress":0.272789971195586,"total":157,"current":82}
+{"_e":"metro:bundling:progress","_t":1789030328128,"id":"1","progress":0.3174779046097555,"total":197,"current":111}
+{"_e":"metro:bundling:progress","_t":1789030328229,"id":"1","progress":0.37693888588426183,"total":215,"current":132}
+{"_e":"metro:bundling:progress","_t":1789030328337,"id":"1","progress":0.42772703804589723,"total":237,"current":155}
+{"_e":"metro:bundling:progress","_t":1789030328483,"id":"1","progress":0.6766389177939647,"total":248,"current":204}
+{"_e":"metro:bundling:progress","_t":1789030328584,"id":"1","progress":0.7055999999999999,"total":250,"current":210}
+{"_e":"metro:bundling:progress","_t":1789030328684,"id":"1","progress":0.7467568529725882,"total":265,"current":229}
+{"_e":"metro:bundling:progress","_t":1789030328786,"id":"1","progress":0.7811074191628646,"total":284,"current":251}
+{"_e":"metro:bundling:progress","_t":1789030328890,"id":"1","progress":0.7811074191628646,"total":316,"current":272}
+{"_e":"metro:bundling:progress","_t":1789030329030,"id":"1","progress":0.8642744250858047,"total":327,"current":304}
+{"_e":"metro:bundling:progress","_t":1789030329145,"id":"1","progress":0.883487090694298,"total":333,"current":313}
+{"_e":"metro:bundling:progress","_t":1789030329248,"id":"1","progress":0.883487090694298,"total":355,"current":329}
+{"_e":"metro:bundling:progress","_t":1789030329463,"id":"1","progress":0.9090185775942953,"total":365,"current":348}
+{"_e":"metro:bundling:progress","_t":1789030329702,"id":"1","progress":0.999,"total":378,"current":378}
+{"_e":"metro:bundling:done","_t":1789030330141,"id":"1","total":378,"ms":3123.5239}
+{"_e":"metro:client_log","_t":1789030330677,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1789030330678,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1789030330679,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"root:init","_t":1789035162780,"format":"v0-jsonl","version":"57.0.22"}
+{"_e":"env:mode","_t":1789035162801,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1789035162824,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1789035174766,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1789035189907,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1789035195813,"plugins":[]}
+{"_e":"metro:instantiate","_t":1789035209645,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1789035213998,"id":"1","platform":"web","environment":null,"entry":"src\\index.js"}
+{"_e":"metro:bundling:progress","_t":1789035213999,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789035214011,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1789035214114,"id":"1","progress":0.032215647600262985,"total":39,"current":7}
+{"_e":"metro:bundling:progress","_t":1789035214223,"id":"1","progress":0.044844290657439445,"total":85,"current":18}
+{"_e":"metro:bundling:progress","_t":1789035214367,"id":"1","progress":0.060467616232195646,"total":122,"current":30}
+{"_e":"metro:bundling:progress","_t":1789035214470,"id":"1","progress":0.13995134827389888,"total":139,"current":52}
+{"_e":"metro:bundling:progress","_t":1789035214579,"id":"1","progress":0.21644885469987707,"total":187,"current":87}
+{"_e":"metro:bundling:progress","_t":1789035214678,"id":"1","progress":0.37827942673662773,"total":226,"current":139}
+{"_e":"metro:bundling:progress","_t":1789035214781,"id":"1","progress":0.6337408688965781,"total":255,"current":203}
+{"_e":"metro:bundling:progress","_t":1789035214882,"id":"1","progress":0.7252057086491277,"total":283,"current":241}
+{"_e":"metro:bundling:progress","_t":1789035214992,"id":"1","progress":0.7626313567273411,"total":292,"current":255}
+{"_e":"metro:bundling:progress","_t":1789035215091,"id":"1","progress":0.7868456198055209,"total":301,"current":267}
+{"_e":"metro:bundling:progress","_t":1789035215193,"id":"1","progress":0.8466177654844018,"total":338,"current":311}
+{"_e":"metro:bundling:progress","_t":1789035215356,"id":"1","progress":0.9839788972823782,"total":373,"current":370}
+{"_e":"metro:bundling:progress","_t":1789035215479,"id":"1","progress":0.999,"total":378,"current":378}
+{"_e":"metro:bundling:done","_t":1789035215705,"id":"1","total":378,"ms":1707.1552}
+{"_e":"metro:client_log","_t":1789035216027,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1789035216027,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1789035216028,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:bundling:failed","_t":1789035650028,"id":null,"message":"SyntaxError: C:\\Users\\HP\\OneDrive\\Documents\\webd\\task\\Jungle Market\\src\\theme\\theme.js: Unexpected digit after hash token. (7:13)\n\n   5 |   colors: {\n   6 |     // Primary deep jungle greens\n>  7 |     primary: #0A3D2E,\n     |              ^\n   8 |     primaryDark: #072B1E,\n   9 |     primaryLight: #186851,\n  10 |     primaryContainer: #0E4C3A,","importStack":null,"filename":"src\\theme\\theme.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:client_log","_t":1789035650063,"level":"error","data":["[TransformError: SyntaxError: C:\\Users\\HP\\OneDrive\\Documents\\webd\\task\\Jungle Market\\src\\theme\\theme.js: Unexpected digit after hash token. (7:13)\n\n   5 |   colors: {\n   6 |     // Primary deep jungle greens\n>  7 |     primary: #0A3D2E,\n     |              ^\n   8 |     primaryDark: #072B1E,\n   9 |     primaryLight: #186851,\n  10 |     primaryContainer: #0E4C3A,]"]}
+{"_e":"metro:bundling:failed","_t":1789035650455,"id":null,"message":"SyntaxError: C:\\Users\\HP\\OneDrive\\Documents\\webd\\task\\Jungle Market\\src\\theme\\theme.js: Unexpected digit after hash token. (7:13)\n\n   5 |   colors: {\n   6 |     // Primary deep jungle greens\n>  7 |     primary: #0A3D2E,\n     |              ^\n   8 |     primaryDark: #072B1E,\n   9 |     primaryLight: #186851,\n  10 |     primaryContainer: #0E4C3A,","importStack":null,"filename":"src\\theme\\theme.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:client_log","_t":1789035650501,"level":"error","data":["[TransformError: SyntaxError: C:\\Users\\HP\\OneDrive\\Documents\\webd\\task\\Jungle Market\\src\\theme\\theme.js: Unexpected digit after hash token. (7:13)\n\n   5 |   colors: {\n   6 |     // Primary deep jungle greens\n>  7 |     primary: #0A3D2E,\n     |              ^\n   8 |     primaryDark: #072B1E,\n   9 |     primaryLight: #186851,\n  10 |     primaryContainer: #0E4C3A,]"]}
+{"_e":"metro:bundling:failed","_t":1789035650895,"id":null,"message":"SyntaxError: C:\\Users\\HP\\OneDrive\\Documents\\webd\\task\\Jungle Market\\src\\theme\\theme.js: Unexpected digit after hash token. (7:13)\n\n   5 |   colors: {\n   6 |     // Primary deep jungle greens\n>  7 |     primary: #0A3D2E,\n     |              ^\n   8 |     primaryDark: #072B1E,\n   9 |     primaryLight: #186851,\n  10 |     primaryContainer: #0E4C3A,","importStack":null,"filename":"src\\theme\\theme.js","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:client_log","_t":1789035650899,"level":"error","data":["[TransformError: SyntaxError: C:\\Users\\HP\\OneDrive\\Documents\\webd\\task\\Jungle Market\\src\\theme\\theme.js: Unexpected digit after hash token. (7:13)\n\n   5 |   colors: {\n   6 |     // Primary deep jungle greens\n>  7 |     primary: #0A3D2E,\n     |              ^\n   8 |     primaryDark: #072B1E,\n   9 |     primaryLight: #186851,\n  10 |     primaryContainer: #0E4C3A,]"]}
+{"_e":"metro:bundling:started","_t":1789036148788,"id":"4","platform":"web","environment":null,"entry":"src\\index.js"}
+{"_e":"metro:bundling:progress","_t":1789036148788,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789036148825,"id":"4","total":1,"ms":36.8027}
+{"_e":"metro:client_log","_t":1789036149241,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1789036149242,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1789036149242,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:bundling:started","_t":1789036736434,"id":"8","platform":"web","environment":null,"entry":"src\\index.js"}
+{"_e":"metro:bundling:progress","_t":1789036736434,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789036736468,"id":"8","total":1,"ms":33.8937}
+{"_e":"metro:client_log","_t":1789036736911,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1789036736911,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1789036736912,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:bundling:started","_t":1789036974470,"id":"b","platform":"web","environment":null,"entry":"src\\index.js"}
+{"_e":"metro:bundling:progress","_t":1789036974471,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1789036974566,"id":"b","total":1,"ms":95.1456}
+{"_e":"metro:client_log","_t":1789036974972,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1789036974973,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1789036974973,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}

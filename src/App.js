@@ -1,9 +1,6 @@
-// Jungle Market — React Native Root Application
-// Architecture: Buyer → Marketplace → Order
-//               Artisan → Voice + Photo → OpenCV → Confidence → Listed or Ambassador Review
-//               Ambassador → Review low-confidence items → Approve/Reject → Listed
-//
-// Simple English rules: short sentences, active voice, no contractions.
+// Jungle Market - React Native Root Application
+// Multi-Portal Architecture: Artiste/Artisan, Buyer, Field Ambassador (3 Core Portals)
+// Modern Luxury & Earthy Tribal Sanctuary Design System
 
 import React, { useState } from 'react';
 import {
@@ -14,14 +11,14 @@ import {
   Modal,
   ScrollView,
   StatusBar,
-  Alert
+  Platform
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { THEME } from './theme/theme';
 import { JUNGLE_DATA } from './data/jungleData';
 
-// Artisan Screens (5 Stitch Frames)
+// Artisan Screens
 import {
   ArtisanDashboardScreen,
   ArtisanSellingWorkflowScreen,
@@ -30,7 +27,7 @@ import {
   ArtisanGuildScreen
 } from './screens/ArtisanScreens';
 
-// Buyer Screens (5 Stitch Frames)
+// Buyer Screens
 import {
   BuyerHomeScreen,
   BuyerCategoriesScreen,
@@ -42,7 +39,7 @@ import {
   BuyerProfileScreen
 } from './screens/BuyerScreens';
 
-// Ambassador Screens (4 Stitch Frames)
+// Ambassador Screens
 import {
   AmbassadorDashboardScreen,
   AmbassadorVerificationScreen,
@@ -51,27 +48,27 @@ import {
 } from './screens/AmbassadorScreens';
 
 export default function App() {
-  // ── Role state ──
+  // Role State: strictly 3 portals: 'artisan' | 'buyer' | 'ambassador'
   const [role, setRole] = useState('artisan');
 
-  // ── Per-role navigation ──
+  // Navigation State per portal
   const [artisanTab, setArtisanTab] = useState('dashboard');
   const [buyerTab, setBuyerTab] = useState('home');
   const [ambassadorTab, setAmbassadorTab] = useState('queue');
 
-  // ── Shared data state ──
+  // Shared Data State
   const [products, setProducts] = useState(JUNGLE_DATA.products || []);
-  const [orders, setOrders] = useState(JUNGLE_DATA.activeOrders || []);
+  const [orders, setOrders] = useState(JUNGLE_DATA.orders || JUNGLE_DATA.activeOrders || []);
   const [cart, setCart] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [lastPlacedOrder, setLastPlacedOrder] = useState(null);
   const [verifyingItem, setVerifyingItem] = useState(null);
 
-  // ── Modals ──
+  // Modals
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
-  // ── Toast ──
+  // Toast
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (message) => {
@@ -79,7 +76,7 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  // ── Cart helpers ──
+  // Cart Handlers
   const handleAddToCart = (product) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
@@ -109,60 +106,57 @@ export default function App() {
     );
   };
 
-  // ── Place order ──
+  // Place Order
   const handlePlaceOrder = (newOrder) => {
     setOrders((prev) => [newOrder, ...prev]);
     setLastPlacedOrder(newOrder);
     setCart([]);
     setIsCartModalOpen(false);
     setBuyerTab('order_success');
-    showToast(`Order ${newOrder.id} placed on ONDC.`);
+    showToast(`Order ${newOrder.id} placed successfully on ONDC.`);
   };
 
-  // ── Artisan publishes a craft ──
-  // Confidence >= 90 → listed directly.
-  // Confidence < 90  → routed to Ambassador queue.
+  // Artisan Publish
   const handleArtisanPublish = (newCraft) => {
     const confidence = newCraft.confidenceScore || 95;
     if (confidence >= 90) {
       setProducts((prev) => [newCraft, ...prev]);
-      showToast(`"${newCraft.title}" is live on the ONDC Network.`);
+      showToast(`"${newCraft.title}" is now LIVE on the ONDC Network.`);
     } else {
-      showToast(`Confidence ${confidence}%. Sent to Ambassador for verification.`);
+      showToast(`Confidence ${confidence}%. Sent to Field Ambassador for physical inspection.`);
     }
     setArtisanTab('dashboard');
   };
 
-  // ── Advance order status (artisan fulfillment) ──
+  // Advance Order Status
   const handleAdvanceOrder = (orderId) => {
     setOrders((prev) =>
       prev.map((ord) => {
         if (ord.id === orderId) {
           const next =
-            ord.status === 'CONFIRMED' ? 'PACKED'
-            : ord.status === 'PACKED' ? 'OUT_FOR_DELIVERY'
+            ord.status === 'CONFIRMED' ? 'PROCESSING'
+            : ord.status === 'PROCESSING' ? 'READY_TO_SHIP'
+            : ord.status === 'READY_TO_SHIP' ? 'SHIPPED'
             : 'DELIVERED';
           return { ...ord, status: next };
         }
         return ord;
       })
     );
-    showToast('Order status updated.');
+    showToast('Fulfillment status updated.');
   };
 
-  // ── Total cart count ──
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
-  // ── Render role-specific screen ──
-  // ── Render role-specific screen ──
+  // Render Role-Specific Content
   const renderContent = () => {
-    // ───────────── ARTISAN (5 Stitch Frames) ─────────────
+    // 1. ARTISAN / ARTISTE PORTAL
     if (role === 'artisan') {
       switch (artisanTab) {
         case 'dashboard':
           return (
             <ArtisanDashboardScreen
-              user={JUNGLE_DATA.currentUser}
+              user={JUNGLE_DATA.currentUser || JUNGLE_DATA.artisan}
               orders={orders}
               products={products}
               onNavigate={(screen) => {
@@ -171,10 +165,6 @@ export default function App() {
                 else if (screen === 'artisan_amount' || screen === 'amount') setArtisanTab('amount');
                 else if (screen === 'artisan_guild' || screen === 'guild') setArtisanTab('guild');
               }}
-              onNavigateSell={() => setArtisanTab('sell')}
-              onNavigateOrders={() => setArtisanTab('orders')}
-              onNavigateAmount={() => setArtisanTab('amount')}
-              onNavigateGuild={() => setArtisanTab('guild')}
             />
           );
         case 'sell':
@@ -194,7 +184,7 @@ export default function App() {
         case 'amount':
           return (
             <ArtisanAmountScreen
-              user={JUNGLE_DATA.currentUser}
+              user={JUNGLE_DATA.currentUser || JUNGLE_DATA.artisan}
               orders={orders}
               onWithdraw={() => {
                 showToast('Payout transfer of ₹18,600 initiated to Bank of Baroda.');
@@ -204,7 +194,7 @@ export default function App() {
         case 'guild':
           return (
             <ArtisanGuildScreen
-              user={JUNGLE_DATA.currentUser}
+              user={JUNGLE_DATA.currentUser || JUNGLE_DATA.artisan}
             />
           );
         default:
@@ -212,7 +202,7 @@ export default function App() {
       }
     }
 
-    // ───────────── BUYER (5 Stitch Frames) ─────────────
+    // 2. BUYER PORTAL
     if (role === 'buyer') {
       switch (buyerTab) {
         case 'home':
@@ -232,7 +222,7 @@ export default function App() {
                 else if (tab === 'profile' || tab === 'buyer_profile') setBuyerTab('profile');
                 else setBuyerTab('home');
               }}
-              onOpenVoiceSearch={() => {}}
+              onOpenVoiceSearch={() => showToast('Voice Search Active: Speak your craft query')}
               onNavigateCategories={() => setBuyerTab('categories')}
               onOpenBulk={() => setBuyerTab('bulk')}
             />
@@ -249,7 +239,7 @@ export default function App() {
             <BulkBuyingScreen
               bulkRequests={JUNGLE_DATA.bulkRequests}
               onOpenRequestModal={() => {
-                showToast('Custom sourcing inquiry sent to Bastar Guild.');
+                showToast('Custom wholesale inquiry sent to Bastar Guild.');
               }}
             />
           );
@@ -298,7 +288,7 @@ export default function App() {
       }
     }
 
-    // ───────────── AMBASSADOR (4 Stitch Frames) ─────────────
+    // 3. FIELD AMBASSADOR PORTAL
     if (role === 'ambassador') {
       switch (ambassadorTab) {
         case 'queue':
@@ -326,7 +316,7 @@ export default function App() {
                 else setAmbassadorTab('queue');
               }}
               onComplete={(itemId) => {
-                showToast('Craft verified and published on ONDC.');
+                showToast('Craft physically verified and published on ONDC Ledger.');
                 setAmbassadorTab('queue');
               }}
             />
@@ -353,354 +343,533 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="light-content" backgroundColor={THEME.colors.primaryDark} />
+      <View style={styles.webViewport}>
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle="light-content" backgroundColor={THEME.colors.primaryDark} />
 
-      {/* ── Header Bar ── */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.logoBadge}>
-            <MaterialIcons name="forest" size={20} color="#fff" />
-          </View>
-          <View style={{ marginLeft: 10 }}>
-            <Text style={styles.brandTitle}>Jungle Market</Text>
-            <Text style={styles.brandSub}>ONDC Craft Network</Text>
-          </View>
-        </View>
-
-        <View style={styles.headerRight}>
-          {/* Cart button — buyer only */}
-          {role === 'buyer' && (
-            <TouchableOpacity
-              style={styles.iconBtn}
-              onPress={() => setIsCartModalOpen(true)}
-            >
-              <MaterialIcons name="shopping-bag" size={20} color="#fff" />
-              {cartCount > 0 && (
-                <View style={styles.cartBadge}>
-                  <Text style={styles.cartBadgeText}>{cartCount}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          )}
-
-          {/* Persona switcher pill */}
-          <TouchableOpacity
-            style={styles.rolePill}
-            onPress={() => setIsRoleModalOpen(true)}
-          >
-            <MaterialIcons
-              name={role === 'artisan' ? 'brush' : role === 'buyer' ? 'person' : 'shield'}
-              size={14}
-              color="#fff"
-            />
-            <Text style={styles.rolePillText}>
-              {role === 'artisan' ? 'Artisan' : role === 'buyer' ? 'Buyer' : 'Ambassador'}
-            </Text>
-            <MaterialIcons name="arrow-drop-down" size={16} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* ── Toast ── */}
-      {toastMessage && (
-        <View style={styles.toast}>
-          <MaterialIcons name="check-circle" size={16} color="#fff" />
-          <Text style={styles.toastText}>{toastMessage}</Text>
-        </View>
-      )}
-
-      {/* ── Main Content ── */}
-      <View style={styles.mainContent}>{renderContent()}</View>
-
-      {/* ── Bottom Tab Bar (Stitch Frames Exact Match) ── */}
-      <View style={styles.tabBar}>
-        {role === 'artisan' && (
-          <>
-            <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('dashboard')}>
-              <MaterialIcons name="dashboard" size={20} color={artisanTab === 'dashboard' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, artisanTab === 'dashboard' && styles.tabLabelActive]}>Dashboard</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('orders')}>
-              <MaterialIcons name="local-shipping" size={20} color={artisanTab === 'orders' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, artisanTab === 'orders' && styles.tabLabelActive]}>Orders</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('sell')}>
-              <View style={styles.sellBtn}>
-                <MaterialIcons name="add" size={22} color="#fff" />
+          {/* Header Bar */}
+          <View style={styles.header}>
+            <View style={styles.headerLeft}>
+              <View style={styles.logoBadge}>
+                <MaterialIcons name="forest" size={20} color="#E8A246" />
               </View>
-              <Text style={[styles.tabLabel, artisanTab === 'sell' && styles.tabLabelActive]}>Sell Craft</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('amount')}>
-              <MaterialIcons name="account-balance-wallet" size={20} color={artisanTab === 'amount' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, artisanTab === 'amount' && styles.tabLabelActive]}>Amount</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('guild')}>
-              <MaterialIcons name="qr-code-2" size={20} color={artisanTab === 'guild' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, artisanTab === 'guild' && styles.tabLabelActive]}>Network QR</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        {role === 'buyer' && (
-          <>
-            <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('home')}>
-              <MaterialIcons name="home" size={20} color={buyerTab === 'home' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, buyerTab === 'home' && styles.tabLabelActive]}>Home</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('categories')}>
-              <MaterialIcons name="category" size={20} color={buyerTab === 'categories' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, buyerTab === 'categories' && styles.tabLabelActive]}>Categories</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('bulk')}>
-              <MaterialIcons name="inventory-2" size={20} color={buyerTab === 'bulk' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, buyerTab === 'bulk' && styles.tabLabelActive]}>Bulk Sourcing</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('orders')}>
-              <MaterialIcons name="receipt-long" size={20} color={buyerTab === 'orders' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, buyerTab === 'orders' && styles.tabLabelActive]}>Orders</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('profile')}>
-              <MaterialIcons name="person" size={20} color={buyerTab === 'profile' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, buyerTab === 'profile' && styles.tabLabelActive]}>Profile</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        {role === 'ambassador' && (
-          <>
-            <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('queue')}>
-              <MaterialIcons name="dashboard" size={20} color={ambassadorTab === 'queue' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, ambassadorTab === 'queue' && styles.tabLabelActive]}>Dashboard</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('verify')}>
-              <MaterialIcons name="fact-check" size={20} color={ambassadorTab === 'verify' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, ambassadorTab === 'verify' && styles.tabLabelActive]}>Verify Queue</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('network')}>
-              <MaterialIcons name="group-add" size={20} color={ambassadorTab === 'network' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, ambassadorTab === 'network' && styles.tabLabelActive]}>Network</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('reports')}>
-              <MaterialIcons name="bar-chart" size={20} color={ambassadorTab === 'reports' ? THEME.colors.primary : THEME.colors.textMuted} />
-              <Text style={[styles.tabLabel, ambassadorTab === 'reports' && styles.tabLabelActive]}>Reports</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-
-      {/* ══════════════════════════════════
-          ROLE SWITCHER MODAL
-          ══════════════════════════════════ */}
-      <Modal visible={isRoleModalOpen} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Select Your Role</Text>
-            <Text style={styles.modalSub}>
-              Experience Jungle Market from any of the three community views.
-            </Text>
-
-            {[
-              { key: 'artisan', icon: 'brush', name: 'Ramesh Baghel (Artisan)', desc: 'List crafts, manage ONDC orders, get direct payouts.' },
-              { key: 'buyer', icon: 'shopping-bag', name: 'Ananya Sharma (Buyer)', desc: 'Browse tribal crafts, hear artisan stories, buy direct.' },
-              { key: 'ambassador', icon: 'verified-user', name: 'Rajesh Sahu (Ambassador)', desc: 'Inspect low-confidence crafts, approve for ONDC.' }
-            ].map((r) => (
-              <TouchableOpacity
-                key={r.key}
-                style={[styles.roleOption, role === r.key && styles.roleOptionActive]}
-                onPress={() => {
-                  setRole(r.key);
-                  if (r.key === 'artisan') setArtisanTab('dashboard');
-                  else if (r.key === 'buyer') setBuyerTab('home');
-                  else setAmbassadorTab('queue');
-                  setIsRoleModalOpen(false);
-                }}
-              >
-                <MaterialIcons name={r.icon} size={24} color={role === r.key ? THEME.colors.primary : THEME.colors.textMuted} />
-                <View style={{ marginLeft: 12, flex: 1 }}>
-                  <Text style={styles.roleOptionName}>{r.name}</Text>
-                  <Text style={styles.roleOptionDesc}>{r.desc}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-
-            <TouchableOpacity style={styles.modalClose} onPress={() => setIsRoleModalOpen(false)}>
-              <Text style={styles.modalCloseText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* ══════════════════════════════════
-          CART DRAWER MODAL (buyer only)
-          ══════════════════════════════════ */}
-      <Modal visible={isCartModalOpen} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            <View style={styles.modalRow}>
-              <Text style={styles.modalTitle}>Your Basket</Text>
-              <TouchableOpacity onPress={() => setIsCartModalOpen(false)}>
-                <MaterialIcons name="close" size={22} color={THEME.colors.textMuted} />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <Text style={styles.brandTitle}>Jungle Market</Text>
+                <Text style={styles.brandSub}>ONDC CRAFT NETWORK</Text>
+              </View>
             </View>
 
-            {cart.length === 0 ? (
-              <View style={{ paddingVertical: 24, alignItems: 'center' }}>
-                <MaterialIcons name="shopping-bag" size={40} color={THEME.colors.textMuted} />
-                <Text style={styles.emptyText}>Your basket is empty.</Text>
-              </View>
-            ) : (
-              <ScrollView style={{ maxHeight: 240, marginVertical: 10 }}>
-                {cart.map((item, idx) => (
-                  <View key={item.product?.id ? `${item.product.id}-${idx}` : `cart-item-${idx}`} style={styles.cartRow}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.cartTitle}>{item.product.title}</Text>
-                      <Text style={styles.cartPrice}>
-                        ₹{item.product.price} × {item.quantity} = ₹{item.product.price * item.quantity}
-                      </Text>
+            <View style={styles.headerRight}>
+              {/* Cart Button (Buyer) */}
+              {role === 'buyer' && (
+                <TouchableOpacity
+                  style={styles.iconBtn}
+                  onPress={() => setIsCartModalOpen(true)}
+                >
+                  <MaterialIcons name="shopping-bag" size={20} color="#fff" />
+                  {cartCount > 0 && (
+                    <View style={styles.cartBadge}>
+                      <Text style={styles.cartBadgeText}>{cartCount}</Text>
                     </View>
-                    <View style={styles.qtyRow}>
-                      <TouchableOpacity style={styles.qtyBtn} onPress={() => handleUpdateCartQty(item.product.id, -1)}>
-                        <Text style={styles.qtyBtnText}>−</Text>
-                      </TouchableOpacity>
-                      <Text style={styles.qtyText}>{item.quantity}</Text>
-                      <TouchableOpacity style={styles.qtyBtn} onPress={() => handleUpdateCartQty(item.product.id, 1)}>
-                        <Text style={styles.qtyBtnText}>+</Text>
-                      </TouchableOpacity>
-                    </View>
+                  )}
+                </TouchableOpacity>
+              )}
+
+              {/* Portal Persona Switcher Pill (3 Portals) */}
+              <TouchableOpacity
+                style={styles.rolePill}
+                onPress={() => setIsRoleModalOpen(true)}
+              >
+                <MaterialIcons
+                  name={
+                    role === 'artisan' ? 'brush'
+                    : role === 'buyer' ? 'shopping-cart'
+                    : 'verified'
+                  }
+                  size={14}
+                  color="#E8A246"
+                />
+                <Text style={styles.rolePillText}>
+                  {role === 'artisan' ? 'Artisan'
+                  : role === 'buyer' ? 'Buyer'
+                  : 'Ambassador'}
+                </Text>
+                <MaterialIcons name="arrow-drop-down" size={16} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Toast Alert */}
+          {toastMessage && (
+            <View style={styles.toast}>
+              <MaterialIcons name="check-circle" size={16} color="#E8A246" />
+              <Text style={styles.toastText}>{toastMessage}</Text>
+            </View>
+          )}
+
+          {/* Main Content Body */}
+          <View style={styles.mainContent}>{renderContent()}</View>
+
+          {/* Bottom Tab Bar (Role specific) */}
+          <View style={styles.tabBar}>
+            {role === 'artisan' && (
+              <>
+                <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('dashboard')}>
+                  <MaterialIcons name="dashboard" size={20} color={artisanTab === 'dashboard' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, artisanTab === 'dashboard' && styles.tabLabelActive]}>Dashboard</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('orders')}>
+                  <MaterialIcons name="local-shipping" size={20} color={artisanTab === 'orders' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, artisanTab === 'orders' && styles.tabLabelActive]}>Orders</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('sell')}>
+                  <View style={styles.sellBtn}>
+                    <MaterialIcons name="add" size={24} color="#fff" />
                   </View>
-                ))}
-              </ScrollView>
+                  <Text style={[styles.tabLabel, artisanTab === 'sell' && styles.tabLabelActive]}>Sell Craft</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('amount')}>
+                  <MaterialIcons name="account-balance-wallet" size={20} color={artisanTab === 'amount' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, artisanTab === 'amount' && styles.tabLabelActive]}>Wallet</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setArtisanTab('guild')}>
+                  <MaterialIcons name="qr-code-2" size={20} color={artisanTab === 'guild' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, artisanTab === 'guild' && styles.tabLabelActive]}>Network QR</Text>
+                </TouchableOpacity>
+              </>
             )}
 
-            {cart.length > 0 && (
-              <TouchableOpacity
-                style={styles.primaryBtn}
-                onPress={() => { setIsCartModalOpen(false); setBuyerTab('checkout'); }}
-              >
-                <Text style={styles.primaryBtnText}>Proceed to Checkout</Text>
-              </TouchableOpacity>
+            {role === 'buyer' && (
+              <>
+                <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('home')}>
+                  <MaterialIcons name="home" size={20} color={buyerTab === 'home' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, buyerTab === 'home' && styles.tabLabelActive]}>Explore</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('categories')}>
+                  <MaterialIcons name="category" size={20} color={buyerTab === 'categories' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, buyerTab === 'categories' && styles.tabLabelActive]}>Categories</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setIsCartModalOpen(true)}>
+                  <View style={styles.sellBtn}>
+                    <MaterialIcons name="shopping-bag" size={20} color="#fff" />
+                  </View>
+                  <Text style={[styles.tabLabel, { color: THEME.colors.primary, fontWeight: '700' }]}>Basket ({cartCount})</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('orders')}>
+                  <MaterialIcons name="receipt-long" size={20} color={buyerTab === 'orders' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, buyerTab === 'orders' && styles.tabLabelActive]}>My Orders</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setBuyerTab('bulk')}>
+                  <MaterialIcons name="business" size={20} color={buyerTab === 'bulk' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, buyerTab === 'bulk' && styles.tabLabelActive]}>B2B Bulk</Text>
+                </TouchableOpacity>
+              </>
+            )}
+
+            {role === 'ambassador' && (
+              <>
+                <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('queue')}>
+                  <MaterialIcons name="checklist" size={20} color={ambassadorTab === 'queue' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, ambassadorTab === 'queue' && styles.tabLabelActive]}>AI Queue</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('network')}>
+                  <MaterialIcons name="groups" size={20} color={ambassadorTab === 'network' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, ambassadorTab === 'network' && styles.tabLabelActive]}>Artisans</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tab} onPress={() => setAmbassadorTab('reports')}>
+                  <MaterialIcons name="insights" size={20} color={ambassadorTab === 'reports' ? THEME.colors.primary : THEME.colors.textMuted} />
+                  <Text style={[styles.tabLabel, ambassadorTab === 'reports' && styles.tabLabelActive]}>Analytics</Text>
+                </TouchableOpacity>
+              </>
             )}
           </View>
-        </View>
-      </Modal>
-      </SafeAreaView>
+
+          {/* Role Switcher Modal (Strictly 3 Portals) */}
+          <Modal visible={isRoleModalOpen} transparent animationType="slide">
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalCard}>
+                <View style={styles.modalRow}>
+                  <Text style={styles.modalTitle}>Switch Experience Portal</Text>
+                  <TouchableOpacity onPress={() => setIsRoleModalOpen(false)}>
+                    <MaterialIcons name="close" size={22} color={THEME.colors.textMuted} />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.modalSub}>Select a persona portal to test all end-to-end flows</Text>
+
+                {/* 1. Artisan Portal */}
+                <TouchableOpacity
+                  style={[styles.roleOption, role === 'artisan' && styles.roleOptionActive]}
+                  onPress={() => { setRole('artisan'); setIsRoleModalOpen(false); }}
+                >
+                  <View style={[styles.roleIconBox, role === 'artisan' && styles.roleIconBoxActive]}>
+                    <MaterialIcons name="brush" size={22} color={role === 'artisan' ? '#FFFFFF' : THEME.colors.primary} />
+                  </View>
+                  <View style={{ marginLeft: 12, flex: 1 }}>
+                    <Text style={styles.roleOptionName}>🎨 Artiste / Artisan Portal</Text>
+                    <Text style={styles.roleOptionDesc}>Voice AI craft listing, fair price calculator, order fulfillment & direct bank wallet</Text>
+                  </View>
+                  {role === 'artisan' && (
+                    <MaterialIcons name="check-circle" size={20} color={THEME.colors.primary} />
+                  )}
+                </TouchableOpacity>
+
+                {/* 2. Buyer Portal */}
+                <TouchableOpacity
+                  style={[styles.roleOption, role === 'buyer' && styles.roleOptionActive]}
+                  onPress={() => { setRole('buyer'); setIsRoleModalOpen(false); }}
+                >
+                  <View style={[styles.roleIconBox, role === 'buyer' && styles.roleIconBoxActive]}>
+                    <MaterialIcons name="shopping-bag" size={22} color={role === 'buyer' ? '#FFFFFF' : '#C87A28'} />
+                  </View>
+                  <View style={{ marginLeft: 12, flex: 1 }}>
+                    <Text style={styles.roleOptionName}>🛍️ Buyer Portal</Text>
+                    <Text style={styles.roleOptionDesc}>Browse authentic GI crafts, listen to audio folklore, direct ONDC express checkout</Text>
+                  </View>
+                  {role === 'buyer' && (
+                    <MaterialIcons name="check-circle" size={20} color={THEME.colors.primary} />
+                  )}
+                </TouchableOpacity>
+
+                {/* 3. Field Ambassador Portal */}
+                <TouchableOpacity
+                  style={[styles.roleOption, role === 'ambassador' && styles.roleOptionActive]}
+                  onPress={() => { setRole('ambassador'); setIsRoleModalOpen(false); }}
+                >
+                  <View style={[styles.roleIconBox, role === 'ambassador' && styles.roleIconBoxActive]}>
+                    <MaterialIcons name="verified" size={22} color={role === 'ambassador' ? '#FFFFFF' : '#2563EB'} />
+                  </View>
+                  <View style={{ marginLeft: 12, flex: 1 }}>
+                    <Text style={styles.roleOptionName}>🛡️ Field Ambassador Portal</Text>
+                    <Text style={styles.roleOptionDesc}>AI verification queue, audio field inspections & ONDC ledger stamping</Text>
+                  </View>
+                  {role === 'ambassador' && (
+                    <MaterialIcons name="check-circle" size={20} color={THEME.colors.primary} />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
+          {/* Cart Drawer Modal */}
+          <Modal visible={isCartModalOpen} transparent animationType="slide">
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalCard}>
+                <View style={styles.modalRow}>
+                  <Text style={styles.modalTitle}>Your Basket ({cartCount})</Text>
+                  <TouchableOpacity onPress={() => setIsCartModalOpen(false)}>
+                    <MaterialIcons name="close" size={22} color={THEME.colors.textMuted} />
+                  </TouchableOpacity>
+                </View>
+
+                {cart.length === 0 ? (
+                  <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+                    <MaterialIcons name="shopping-bag" size={40} color={THEME.colors.textMuted} />
+                    <Text style={styles.emptyText}>Your basket is currently empty.</Text>
+                  </View>
+                ) : (
+                  <ScrollView style={{ maxHeight: 240, marginVertical: 10 }}>
+                    {cart.map((item, idx) => (
+                      <View key={item.product?.id ? `${item.product.id}-${idx}` : `cart-item-${idx}`} style={styles.cartRow}>
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.cartTitle}>{item.product.title}</Text>
+                          <Text style={styles.cartPrice}>
+                            ₹{item.product.price} × {item.quantity} = ₹{item.product.price * item.quantity}
+                          </Text>
+                        </View>
+                        <View style={styles.qtyRow}>
+                          <TouchableOpacity style={styles.qtyBtn} onPress={() => handleUpdateCartQty(item.product.id, -1)}>
+                            <Text style={styles.qtyBtnText}>−</Text>
+                          </TouchableOpacity>
+                          <Text style={styles.qtyText}>{item.quantity}</Text>
+                          <TouchableOpacity style={styles.qtyBtn} onPress={() => handleUpdateCartQty(item.product.id, 1)}>
+                            <Text style={styles.qtyBtnText}>+</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ))}
+                  </ScrollView>
+                )}
+
+                {cart.length > 0 && (
+                  <TouchableOpacity
+                    style={styles.primaryBtn}
+                    onPress={() => { setIsCartModalOpen(false); setBuyerTab('checkout'); }}
+                  >
+                    <Text style={styles.primaryBtnText}>Proceed to ONDC Direct Checkout →</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </Modal>
+        </SafeAreaView>
+      </View>
     </SafeAreaProvider>
   );
 }
 
-// ──────────────────────────────────────
-// Stylesheet
-// ──────────────────────────────────────
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: THEME.colors.primaryDark },
+  webViewport: {
+    flex: 1,
+    backgroundColor: '#121714',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  safeArea: {
+    flex: 1,
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 520 : '100%',
+    backgroundColor: THEME.colors.primaryDark,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.4,
+    shadowRadius: 30,
+    elevation: 10,
+  },
 
   // Header
   header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: THEME.colors.primaryDark, paddingHorizontal: 16, paddingVertical: 12
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.colors.primaryDark,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   logoBadge: {
-    width: 36, height: 36, borderRadius: 8,
-    backgroundColor: THEME.colors.primary, alignItems: 'center', justifyContent: 'center'
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: 'rgba(200,122,40,0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(200,122,40,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  brandTitle: { fontSize: 18, fontWeight: '600', color: '#fff' },
-  brandSub: { fontSize: 10, fontWeight: '400', color: THEME.colors.primaryLight, letterSpacing: 0.5 },
+  brandTitle: {
+    fontFamily: THEME.fonts.display,
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#fff',
+    letterSpacing: 0.5,
+  },
+  brandSub: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#D5DFD1',
+    letterSpacing: 0.8,
+    marginTop: 1,
+  },
   iconBtn: {
-    width: 36, height: 36, borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center'
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cartBadge: {
-    position: 'absolute', top: -4, right: -4,
-    backgroundColor: THEME.colors.bark, borderRadius: 9, width: 18, height: 18,
-    alignItems: 'center', justifyContent: 'center'
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#C87A28',
+    borderRadius: 9,
+    width: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  cartBadgeText: { color: '#fff', fontSize: 10, fontWeight: '600' },
+  cartBadgeText: { color: '#fff', fontSize: 10, fontWeight: '800' },
   rolePill: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.18)', paddingHorizontal: 10, paddingVertical: 6,
-    borderRadius: THEME.radius.full, gap: 4
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: THEME.radius.full,
+    gap: 6,
   },
-  rolePillText: { color: '#fff', fontSize: 12, fontWeight: '500' },
+  rolePillText: {
+    fontFamily: THEME.fonts.display,
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+  },
 
   // Toast
   toast: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: THEME.colors.bark, paddingHorizontal: 16, paddingVertical: 10, gap: 8
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0A3D2E',
+    borderWidth: 1,
+    borderColor: '#E8A246',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 8,
   },
-  toastText: { color: '#fff', fontSize: 12, fontWeight: '500', flex: 1 },
+  toastText: { color: '#fff', fontSize: 12, fontWeight: '600', flex: 1 },
 
-  // Main
+  // Main Content
   mainContent: { flex: 1, backgroundColor: THEME.colors.surfaceWarm },
 
-  // Bottom tabs
+  // Bottom Tabs
   tabBar: {
-    flexDirection: 'row', backgroundColor: THEME.colors.surfaceCard,
-    borderTopWidth: 1, borderTopColor: THEME.colors.border,
-    paddingVertical: 8, paddingBottom: 16, justifyContent: 'space-around', alignItems: 'center'
+    flexDirection: 'row',
+    backgroundColor: THEME.colors.surfaceCard,
+    borderTopWidth: 1,
+    borderTopColor: THEME.colors.border,
+    paddingVertical: 6,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   tab: { alignItems: 'center', flex: 1 },
-  tabLabel: { fontSize: 10, fontWeight: '400', color: THEME.colors.textMuted, marginTop: 2 },
-  tabLabelActive: { color: THEME.colors.primary, fontWeight: '700' },
+  tabLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: THEME.colors.textMuted,
+    marginTop: 2,
+  },
+  tabLabelActive: {
+    color: THEME.colors.primary,
+    fontWeight: '800',
+  },
   sellBtn: {
-    width: 38, height: 38, borderRadius: 19,
-    backgroundColor: THEME.colors.primary, alignItems: 'center', justifyContent: 'center',
-    marginTop: -10,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 3, elevation: 4
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: THEME.colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: -14,
+    shadowColor: '#0A3D2E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
 
-  // Modal shared
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+  // Modal Styles
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.65)', justifyContent: 'flex-end' },
   modalCard: {
     backgroundColor: THEME.colors.surfaceCard,
-    borderTopLeftRadius: THEME.radius.xl, borderTopRightRadius: THEME.radius.xl, padding: 20
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: THEME.colors.border,
   },
   modalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  modalTitle: { fontSize: 18, fontWeight: '600', color: THEME.colors.textDark },
-  modalSub: { fontSize: 13, fontWeight: '400', color: THEME.colors.textMuted, marginTop: 4, marginBottom: 16 },
-  modalClose: { alignItems: 'center', paddingVertical: 12, marginTop: 8 },
-  modalCloseText: { fontSize: 14, fontWeight: '500', color: THEME.colors.textMuted },
+  modalTitle: {
+    fontFamily: THEME.fonts.display,
+    fontSize: 18,
+    fontWeight: '800',
+    color: THEME.colors.textDark,
+  },
+  modalSub: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: THEME.colors.textMuted,
+    marginTop: 4,
+    marginBottom: 16,
+  },
 
-  // Role selector
+  // Role Switcher Cards
   roleOption: {
-    flexDirection: 'row', alignItems: 'center', padding: 14,
-    borderRadius: THEME.radius.md, borderWidth: 1, borderColor: THEME.colors.border, marginBottom: 10
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: THEME.colors.border,
+    marginBottom: 10,
+    backgroundColor: '#FFFFFF',
   },
-  roleOptionActive: { borderColor: THEME.colors.primary, backgroundColor: THEME.colors.surface },
-  roleOptionName: { fontSize: 14, fontWeight: '600', color: THEME.colors.textDark },
-  roleOptionDesc: { fontSize: 12, fontWeight: '400', color: THEME.colors.textMuted, marginTop: 2 },
+  roleOptionActive: {
+    borderColor: THEME.colors.primary,
+    backgroundColor: '#F3F8F4',
+  },
+  roleIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: THEME.colors.surfaceWarm,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roleIconBoxActive: {
+    backgroundColor: THEME.colors.primary,
+  },
+  roleOptionName: {
+    fontFamily: THEME.fonts.display,
+    fontSize: 14,
+    fontWeight: '700',
+    color: THEME.colors.textDark,
+  },
+  roleOptionDesc: {
+    fontSize: 11,
+    color: THEME.colors.textMuted,
+    marginTop: 2,
+    lineHeight: 15,
+  },
 
-  // Cart drawer
+  // Cart Drawer
   cartRow: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: THEME.colors.borderLight
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.colors.borderLight,
   },
-  cartTitle: { fontSize: 13, fontWeight: '500', color: THEME.colors.textDark },
-  cartPrice: { fontSize: 12, fontWeight: '400', color: THEME.colors.primary, marginTop: 2 },
+  cartTitle: { fontSize: 13, fontWeight: '700', color: THEME.colors.textDark },
+  cartPrice: { fontSize: 12, fontWeight: '700', color: '#C87A28', marginTop: 2 },
   qtyRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   qtyBtn: {
-    width: 28, height: 28, borderRadius: 14, backgroundColor: THEME.colors.surfaceWarm,
-    alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: THEME.colors.border
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: THEME.colors.surfaceWarm,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
   },
-  qtyBtnText: { fontSize: 14, fontWeight: '500', color: THEME.colors.textDark },
-  qtyText: { fontSize: 13, fontWeight: '500', color: THEME.colors.textDark },
-  emptyText: { fontSize: 14, fontWeight: '400', color: THEME.colors.textMuted, marginTop: 8 },
+  qtyBtnText: { fontSize: 14, fontWeight: '700', color: THEME.colors.textDark },
+  qtyText: { fontSize: 13, fontWeight: '700', color: THEME.colors.textDark },
+  emptyText: { fontSize: 13, fontWeight: '500', color: THEME.colors.textMuted, marginTop: 8 },
   primaryBtn: {
-    backgroundColor: THEME.colors.primary, paddingVertical: 14,
-    borderRadius: THEME.radius.md, alignItems: 'center', marginTop: 14
+    backgroundColor: THEME.colors.primary,
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginTop: 14,
+    shadowColor: '#0A3D2E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 4,
   },
-  primaryBtnText: { fontSize: 14, fontWeight: '500', color: '#fff' },
+  primaryBtnText: {
+    fontFamily: THEME.fonts.display,
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#fff',
+    letterSpacing: 0.5,
+  },
 });
