@@ -1,0 +1,55 @@
+{
+  "colors": {
+    "Forest": "#004525",
+    "Deep jungle": "#072B1E",
+    "Forest surface": "#0E4C3A",
+    "Bark": "#835331",
+    "Gold": "#C99A45",
+    "Strong amber": "#D97706",
+    "Parchment": "#FAF7EE",
+    "Discovery": "#FAFAF7",
+    "Cream": "#FFF8DC",
+    "White": "#FFFFFF",
+    "Sage": "#E8F8E7",
+    "Main text": "#0A3D2E",
+    "Muted": "#526259",
+    "Border": "#E6DEC8",
+    "Success": "#059669",
+    "Error": "#DC2626"
+  },
+  "typography": {
+    "headings": "Outfit",
+    "body": "Plus Jakarta Sans",
+    "editorial": "Fraunces"
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48
+  ],
+  "cardRadius": [
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    28
+  ],
+  "minimumTouchTarget": 44,
+  "motionMilliseconds": [
+    160,
+    260,
+    420
+  ],
+  "breakpoints": [
+    375,
+    768,
+    1024,
+    1440
+  ]
+}

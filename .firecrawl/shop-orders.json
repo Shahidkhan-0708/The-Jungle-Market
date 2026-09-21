@@ -1,0 +1,27 @@
+﻿{
+    "success":  true,
+    "data":  {
+                 "markdown":  "[Home](https://shop.app/)\n\nHome\n\n[Explore](https://shop.app/categories)\n\nExplore\n\n[View Cart](https://shop.app/cart)\n\nView Cart\n\n[Deals](https://shop.app/offers)\n\nDeals\n\nSaved\n\nSign in\n\nSuggested searches\n\n- Plant-based protein powders\n\n- Vegan leather handbags\n\n- Bedroom decor\n\n- Waterproof jackets\n\n- Hoodies\n\n\n[Learn more about how we use your data to personalize your experience and ads. Recommendations are for informational purposes only.](https://www.shopify.com/legal/privacy/consumers)\n\n#### Sign in to your account\n\n## Sign in to your account\n\nSign in\n\nShop\n\nShopping designed around you.\n\n![](https://shop.app/qr/u/download?qr_bg_color=black\u0026qr_brand_color=white\u0026qr_color=white\u0026utm_source=shop-website\u0026sid=3f65a646-8c1e-4815-ae19-898bd0dc249f\u0026qr_size=264\u0026qr_branding=shoplogo\u0026qr_deferred=true)\n\n[![Download Shop](https://shopify-assets.shopifycdn.com/shopifycloud/shop-client/production/0b6165618702b1896c7c9fb23d534820702a73bb/assets/apple-badge-light-QLcYWftF.svg)](https://open.shop.app/E2jp6/yphyl/7qog?sid=3f65a646-8c1e-4815-ae19-898bd0dc249f)[![Download Shop](https://shopify-assets.shopifycdn.com/shopifycloud/shop-client/production/0b6165618702b1896c7c9fb23d534820702a73bb/assets/google-badge-light-BMF1GKqE.svg)](https://open.shop.app/E2jp6/frmk/3n2h?sid=3f65a646-8c1e-4815-ae19-898bd0dc249f)\n\nStart selling\n\n[For brands](https://www.shopify.com/shop?utm_medium=website\u0026utm_source=shop-website\u0026utm_campaign=shop_app_footer_for_brands) [For creators](https://www.shopify.com/collabs/creators?utm_medium=website\u0026utm_source=shop-website\u0026utm_campaign=shop_app_footer_for_creators) [Build your store](https://www.shopify.com/free-trial?utm_medium=website\u0026utm_source=shop-website\u0026utm_campaign=shop_app_footer_build_your_store)\n\nInformation\n\n[Shop Pay](https://shop.app/shop-pay?utm_medium=website\u0026utm_source=shop-website) [Help center](https://help.shop.app/shop?utm_medium=website\u0026utm_source=shop-website)\n\nSocial\n\n[X (Twitter)](https://twitter.com/shop?utm_medium=website\u0026utm_source=shop-website) [Instagram](https://instagram.com/shopapp?utm_medium=website\u0026utm_source=shop-website)\n\nLegal\n\n[Terms of Service](https://shop.app/terms-of-service?locale=en-US) [Privacy Policy](https://www.shopify.com/legal/privacy/app-users?utm_medium=website\u0026utm_source=shop-website) [Your Privacy Choices](https://privacy.shopify.com/?utm_medium=website\u0026utm_source=shop-website)\n\n* * *\n\nPowered by\n\n\\|\n\n[Start selling for free](https://www.shopify.com/free-trial?utm_medium=website\u0026utm_source=shop-website\u0026utm_campaign=shop_app_subfooter_start_selling)\n\n[Language](https://shop.app/language-settings)\n\n© Shopify Inc. 2026",
+                 "metadata":  {
+                                  "language":  "en-US",
+                                  "viewport":  "width=device-width, initial-scale=1.0, maximum-scale=1",
+                                  "favicon":  "https://shopify-assets.shopifycdn.com/shop-assets/static_uploads/shoplift/favicon.png",
+                                  "scrapeId":  "01a098c9-a0b4-74cd-a082-0739bc73d6b8",
+                                  "sourceURL":  "https://shop.app/account/order-history",
+                                  "url":  "https://shop.app/account/order-history",
+                                  "statusCode":  200,
+                                  "contentType":  "text/html; charset=utf-8",
+                                  "timezone":  "America/New_York",
+                                  "proxyUsed":  "basic",
+                                  "cacheState":  "miss",
+                                  "indexId":  "f947545a-3121-4cb6-b730-244a7359bd80",
+                                  "creditsUsed":  1,
+                                  "concurrencyLimited":  false
+                              },
+                 "images":  [
+                                "https://shop.app/qr/u/download?qr_bg_color=black\u0026qr_brand_color=white\u0026qr_color=white\u0026utm_source=shop-website\u0026sid=3f65a646-8c1e-4815-ae19-898bd0dc249f\u0026qr_size=264\u0026qr_branding=shoplogo\u0026qr_deferred=true",
+                                "https://shopify-assets.shopifycdn.com/shopifycloud/shop-client/production/0b6165618702b1896c7c9fb23d534820702a73bb/assets/apple-badge-light-QLcYWftF.svg",
+                                "https://shopify-assets.shopifycdn.com/shopifycloud/shop-client/production/0b6165618702b1896c7c9fb23d534820702a73bb/assets/google-badge-light-BMF1GKqE.svg"
+                            ]
+             }
+}

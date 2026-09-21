@@ -1,0 +1,23 @@
+{
+  "theme_color": "#072b1e",
+  "background_color": "#faf7ee",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "Jungle Market",
+  "short_name": "Jungle Market",
+  "description": "Discover handmade crafts, meet their makers, and manage your orders.",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "id": "/"
+}

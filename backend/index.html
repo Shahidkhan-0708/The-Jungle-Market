@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jungle Market - AI Appraisal Dashboard</title>
+    <script src="https://tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans min-h-screen flex flex-col justify-center items-center p-6">
+
+    <div class="max-w-3xl w-full bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-700">
+        <h1 class="text-3xl font-extrabold text-center mb-2 tracking-tight bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+            Jungle Market AI Appraisal Engine
+        </h1>
+        <p class="text-gray-400 text-center mb-8 text-sm">Upload a product image to instantly analyze features, tier values, and generate SEO copy.</p>
+
+        <!-- DRAG AND DROP ZONE -->
+        <div id="dropZone" class="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center cursor-pointer hover:border-green-400 transition-colors flex flex-col items-center justify-center min-h-[200px]">
+            <input type="file" id="fileInput" class="hidden" accept="image/*">
+            <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <p id="dropText" class="text-gray-300 font-medium">Drag & drop your product image here, or <span class="text-green-400">browse files</span></p>
+            <p class="text-gray-500 text-xs mt-1">Supports PNG, JPG, or JPEG formats</p>
+        </div>
+
+        <!-- IMAGE PREVIEW -->
+        <div id="previewContainer" class="hidden mt-6 flex justify-center">
+            <img id="imagePreview" class="max-h-48 rounded-lg shadow-md border border-gray-700" src="" alt="Preview">
+        </div>
+
+        <!-- LOADING PANEL -->
+        <div id="loadingPanel" class="hidden mt-6 text-center py-4">
+            <div class="animate-spin inline-block w-8 h-8 border-4 border-green-400 border-t-transparent rounded-full mb-2"></div>
+            <p class="text-gray-400 text-sm">Offloading inference variables over tunnel to Cloud GPU...</p>
+        </div>
+
+        <!-- APPRAISAL CONTAINER -->
+        <div id="resultContainer" class="hidden mt-8 space-y-6">
+            <h2 class="text-xl font-bold border-b border-gray-700 pb-2 text-green-400">📊 Valuation & Feature Analysis</h2>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-750 p-4 rounded-xl border border-gray-700">
+                    <span class="text-xs text-gray-400 block mb-1">DETECTION SPECIFICATION</span>
+                    <p id="resCategory" class="text-lg font-bold text-white">-</p>
+                </div>
+                <div class="bg-gray-750 p-4 rounded-xl border border-gray-700">
+                    <span class="text-xs text-gray-400 block mb-1">MATERIAL MATRIX TYPE</span>
+                    <p id="resMaterial" class="text-lg font-bold text-white">-</p>
+                </div>
+            </div>
+
+            <!-- VALUATION SLOTS -->
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-gray-900 p-4 rounded-xl text-center border border-gray-800">
+                    <span class="text-xs text-gray-400 block mb-1">P20 Budget</span>
+                    <p id="priceP20" class="text-xl font-extrabold text-blue-400">\$0.00</p>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-xl text-center border border-emerald-900 bg-emerald-950/20">
+                    <span class="text-xs text-green-400 block mb-1">P50 Fair Value</span>
+                    <p id="priceP50" class="text-2xl font-black text-green-400">\$0.00</p>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-xl text-center border border-gray-800">
+                    <span class="text-xs text-gray-400 block mb-1">P80 Premium</span>
+                    <p id="priceP80" class="text-xl font-extrabold text-purple-400">\$0.00</p>
+                </div>
+            </div>
+
+            <!-- SEO LAYER -->
+            <div class="bg-gray-900 p-5 rounded-xl border border-gray-700">
+                <span class="text-xs text-emerald-400 font-bold block mb-2 tracking-wider">✍️ LIVE AI SEO DESCRIPTIVE TEXT</span>
+                <p id="resSEO" class="text-gray-300 text-sm leading-relaxed italic">Generating structural copywriting configurations...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIPELINE BRIDGING INTERFACE ENGINE -->
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const dropText = document.getElementById('dropText');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const loadingPanel = document.getElementById('loadingPanel');
+        const resultContainer = document.getElementById('resultContainer');
+
+        // IMPORTANT: Replace this exact parameter URL with your active live Google Colab tunnel link!
+        const CLOUD_TUNNEL_URL = "https://sleeve-voicing-blasphemy.ngrok-free.dev";
+
+        // Drag-and-drop listener actions
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-green-400'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-green-400'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-green-400');
+            if (e.dataTransfer.files.length) processAndSendImage(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) processAndSendImage(e.target.files[0]);
+        });
+
+        async function processAndSendImage(file) {
+            // Renders instant image layout previews
+            const reader = new FileReader();
+            reader.onload = (e) => { imagePreview.src = e.target.result; previewContainer.classList.remove('hidden'); };
+            reader.readAsDataURL(file);
+
+            // Update loader screen flags
+            loadingPanel.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                // Post data payload directly to the cloud tunnel API endpoint
+                const response = await fetch(CLOUD_TUNNEL_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Inject calculated metadata elements into structural document items
+                    document.getElementById('resCategory').innerText = data.detected_category;
+                    document.getElementById('resMaterial').innerText = data.detected_material;
+                    document.getElementById('priceP20').innerText = `$${data.pricing_estimates.p20_budget_tier.toFixed(2)}`;
+                    document.getElementById('priceP50').innerText = `$${data.pricing_estimates.p50_fair_value.toFixed(2)}`;
+                    document.getElementById('priceP80').innerText = `$${data.pricing_estimates.p80_premium_tier.toFixed(2)}`;
+                    document.getElementById('resSEO').innerText = `"${data.seo_description}"`;
+
+                    resultContainer.classList.remove('hidden');
+                } else {
+                    alert("⚠️ Server dropped transmission package context index formatting.");
+                }
+            } catch (err) {
+                alert("❌ Connection Error: Ensure your Google Colab instance is completely running!");
+                console.error(err);
+            } finally {
+                loadingPanel.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

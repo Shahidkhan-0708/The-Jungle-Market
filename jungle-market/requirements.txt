@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+sqlalchemy
+aiosqlite
+asyncpg
+psycopg2-binary
+pydantic
+pydantic-settings
+httpx
+openai
+supabase>=2.7.4
+Pillow
+opencv-python-headless==4.11.0.86
+numpy>=1.26.4,<2.0.0

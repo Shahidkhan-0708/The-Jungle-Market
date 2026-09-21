@@ -1,0 +1,6 @@
+# Optional emergency fallback only. Normal development uses the Colab ML service.
+rembg>=2.0.57
+onnxruntime>=1.18.0
+faster-whisper>=1.0.3
+llama-cpp-python>=0.3.0
+catboost>=1.2.5

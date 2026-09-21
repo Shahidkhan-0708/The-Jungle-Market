@@ -1,0 +1,25 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build --webpack",
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{node_modules,.next,.next-production,.sites-runtime,.vinext,.wrangler,venv,.venv,public,app,components,lib,hooks,qa-reports,tests,examples,dist,build,vendor,design-package}/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/v1/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/ready",
+      "destination": "/api/index"
+    }
+  ],
+  "outputDirectory": ".next-production"
+}

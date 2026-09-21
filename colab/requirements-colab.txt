@@ -1,0 +1,6 @@
+fastapi>=0.111
+uvicorn>=0.30
+python-multipart>=0.0.9
+pyngrok>=7.2
+rembg[cpu]>=2.0.57
+faster-whisper>=1.0.3

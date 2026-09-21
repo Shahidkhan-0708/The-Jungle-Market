@@ -1,0 +1,34 @@
+version: 2.1
+
+jobs:
+  backend:
+    docker:
+      - image: cimg/python:3.12
+    working_directory: ~/project/backend
+    steps:
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          keys:
+            - backend-v1-{{ checksum "pyproject.toml" }}
+      - run:
+          name: Install backend in a fresh environment
+          command: python -m pip install -e ".[dev]"
+      - save_cache:
+          key: backend-v1-{{ checksum "pyproject.toml" }}
+          paths:
+            - ~/.cache/pip
+      - run:
+          name: Ruff
+          command: ruff check apps jungle_market tests
+      - run:
+          name: Mypy
+          command: mypy apps jungle_market
+      - run:
+          name: Pytest
+          command: pytest
+
+workflows:
+  backend:
+    jobs:
+      - backend
