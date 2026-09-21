@@ -1,25 +1,41 @@
+# Dependencies
 node_modules
+venv/
+.venv/
+
+# Next.js & Frontend Build
 .next
 .vinext
 dist
 build
-.gstack/
-venv/
-.venv/
+*.tsbuildinfo
+next-env.d.ts
+
+# Python Artifacts
 __pycache__/
 *.pyc
+*.pyd
+*.dll
+*.pth
+
+# Database & Media
 *.db
 *.mp4
+*.zip
+
+# Env Files
 .env
 .env.local
+
+# Tools & Configs
 .vercel
 .agents/
 .circleci/
 .firecrawl/
 .gstack/
-*.zip
-.venv/
-venv/
-*.pyd
-*.dll
-*.pth
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
