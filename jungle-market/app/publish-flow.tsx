@@ -183,8 +183,38 @@ export default function PublishFlow({ token = "", craft, onSaved, onClose, step:
   async function processBackgroundRemoval(fileOrUrl: string | File) {
     setBusy("Isolating background & generating catalog PNG");
     try {
-      const { pngUrl } = await removeBackgroundClient(fileOrUrl);
-      setCleanedPhotoUrl(pngUrl);
+      let isLocalFallback = false;
+      let finalUrl = "";
+
+      // Try Python rembg via Next.js proxy if we have a File
+      if (fileOrUrl instanceof File) {
+        try {
+          const formData = new FormData();
+          formData.append("file", fileOrUrl);
+          const rembgRes = await fetch("/api/rembg", {
+            method: "POST",
+            body: formData,
+          });
+          if (rembgRes.ok) {
+            const blob = await rembgRes.blob();
+            finalUrl = URL.createObjectURL(blob);
+          } else {
+            isLocalFallback = true;
+          }
+        } catch (e) {
+          isLocalFallback = true;
+        }
+      } else {
+        isLocalFallback = true;
+      }
+
+      if (isLocalFallback) {
+        console.warn("Falling back to local Canvas background removal...");
+        const { pngUrl } = await removeBackgroundClient(fileOrUrl);
+        finalUrl = pngUrl;
+      }
+
+      setCleanedPhotoUrl(finalUrl);
       setActivePhotoView("clean");
       setNotice("Background cleaned! Ready for professional buyer catalog.");
     } catch (err) {
