@@ -13,7 +13,10 @@ __pycache__/
 .env
 .env.local
 .vercel
-.agents
+.agents/
+.circleci/
+.firecrawl/
+.gstack/
 *.zip
 .venv/
 venv/
