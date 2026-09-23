@@ -1,9 +1,0 @@
-{
-  "engines": {
-    "node": "20.x"
-  },
-  "dependencies": {
-    "ngrok": "^5.0.0-beta.2",
-    "next": "latest"
-  }
-}

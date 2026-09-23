@@ -1,5 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "cd jungle-market && npm i -g pnpm@9 && pnpm install && pnpm run build",
-  "outputDirectory": "jungle-market/.next-production"
-}
