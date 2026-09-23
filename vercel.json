@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "cd jungle-market && npm install && npm run build",
+  "outputDirectory": "jungle-market/.next"
+}
