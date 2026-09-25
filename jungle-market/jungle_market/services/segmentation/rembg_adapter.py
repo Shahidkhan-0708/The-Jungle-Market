@@ -9,7 +9,10 @@ except ImportError:
 class RembgAdapter:
     def __init__(self):
         # We instantiate a session to avoid reloading the model every request
-        self.session = rembg.new_session("u2net") if rembg else None
+        import os
+        model_name = os.getenv("REMBG_MODEL", "u2netp")
+        self.session = rembg.new_session(model_name) if rembg else None
+
 
     def extract_foreground(self, cv_image: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """

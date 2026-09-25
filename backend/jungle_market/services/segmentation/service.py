@@ -16,13 +16,25 @@ class MaskCleanupResult:
 
 
 class ForegroundExtractor:
+    def __init__(self) -> None:
+        self._session = None
+
+    def _get_session(self):
+        if self._session is None:
+            import os
+            from rembg import new_session
+            model_name = os.getenv("REMBG_MODEL", "u2netp")
+            self._session = new_session(model_name)
+        return self._session
+
     def extract_mask(self, rgb_array: np.ndarray) -> np.ndarray:
         try:
             from rembg import remove
         except ImportError as exc:
             raise ForegroundExtractionError("rembg is not installed") from exc
 
-        result = remove(rgb_array)
+        session = self._get_session()
+        result = remove(rgb_array, session=session)
         if result.ndim == 3 and result.shape[2] == 4:
             alpha = result[:, :, 3]
         else:

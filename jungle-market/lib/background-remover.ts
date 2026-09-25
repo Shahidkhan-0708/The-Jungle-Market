@@ -76,34 +76,57 @@ export async function removeBackgroundClient(imageSrc: string | File): Promise<{
           );
         };
 
-        // Determine dynamic threshold
-        const threshold = 32;
-        const feather = 18;
+        // Dynamic threshold for background color distance
+        const threshold = 34;
 
-        // Radial distance weighting: items near borders are more likely background
-        const cx = w / 2;
-        const cy = h / 2;
-        const maxDist = Math.sqrt(cx * cx + cy * cy);
+        // Flood-fill only from the outer borders inward so internal object features
+        // (like white card surfaces, white craft inlays, and face photos) are NEVER erased.
+        const visited = new Uint8Array(w * h);
+        const queue: number[] = [];
 
-        for (let y = 0; y < h; y++) {
-          for (let x = 0; x < w; x++) {
-            const idx = (y * w + x) * 4;
-            const r = data[idx];
-            const g = data[idx + 1];
-            const b = data[idx + 2];
+        // Seed with outer border pixels
+        for (let x = 0; x < w; x++) {
+          queue.push(x, 0);
+          queue.push(x, h - 1);
+          visited[x] = 1;
+          visited[(h - 1) * w + x] = 1;
+        }
+        for (let y = 1; y < h - 1; y++) {
+          queue.push(0, y);
+          queue.push(w - 1, y);
+          visited[y * w] = 1;
+          visited[y * w + (w - 1)] = 1;
+        }
 
-            const diff = colorDist(r, g, b);
-            const distFromCenter = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)) / maxDist;
+        let head = 0;
+        while (head < queue.length) {
+          const qx = queue[head++];
+          const qy = queue[head++];
+          const idx = (qy * w + qx) * 4;
+          const r = data[idx];
+          const g = data[idx + 1];
+          const b = data[idx + 2];
 
-            // Increase background sensitivity towards edges
-            const adjustedThreshold = threshold - distFromCenter * 8;
+          const diff = colorDist(r, g, b);
+          if (diff < threshold) {
+            data[idx + 3] = 0; // Transparent background
 
-            if (diff < adjustedThreshold) {
-              data[idx + 3] = 0; // completely transparent
-            } else if (diff < adjustedThreshold + feather) {
-              // Smooth soft edge feathering
-              const alphaRatio = (diff - adjustedThreshold) / feather;
-              data[idx + 3] = Math.round(alphaRatio * 255);
+            // Propagate only into adjacent matching background pixels
+            if (qx + 1 < w && !visited[qy * w + (qx + 1)]) {
+              visited[qy * w + (qx + 1)] = 1;
+              queue.push(qx + 1, qy);
+            }
+            if (qx - 1 >= 0 && !visited[qy * w + (qx - 1)]) {
+              visited[qy * w + (qx - 1)] = 1;
+              queue.push(qx - 1, qy);
+            }
+            if (qy + 1 < h && !visited[(qy + 1) * w + qx]) {
+              visited[(qy + 1) * w + qx] = 1;
+              queue.push(qx, qy + 1);
+            }
+            if (qy - 1 >= 0 && !visited[(qy - 1) * w + qx]) {
+              visited[(qy - 1) * w + qx] = 1;
+              queue.push(qx, qy - 1);
             }
           }
         }

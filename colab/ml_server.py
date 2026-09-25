@@ -46,7 +46,8 @@ def whisper_runtime() -> tuple[str, str]:
 def rembg_session():
     import rembg
 
-    return rembg.new_session(os.getenv("REMBG_MODEL", "u2net"))
+    return rembg.new_session(os.getenv("REMBG_MODEL", "u2netp"))
+
 
 
 @lru_cache(maxsize=1)
@@ -109,7 +110,7 @@ async def health() -> dict[str, object]:
             "loaded": whisper_model.cache_info().currsize > 0,
         },
         "rembg": {
-            "model": os.getenv("REMBG_MODEL", "u2net"),
+            "model": os.getenv("REMBG_MODEL", "u2netp"),
             "loaded": rembg_session.cache_info().currsize > 0,
         },
     }

@@ -6,17 +6,18 @@ import numpy as np
 from PIL import Image
 
 def test_rembg():
-    print("Testing Rembg (U2Net)...")
+    print("Testing Rembg (U2NetP)...")
     try:
-        from rembg import remove
+        from rembg import remove, new_session
         # Create a valid simple PIL image
         img = Image.new('RGB', (100, 100), color='red')
         img_bytes = io.BytesIO()
         img.save(img_bytes, format='JPEG')
         img_bytes = img_bytes.getvalue()
         
-        out_bytes = remove(img_bytes)
-        print("Rembg (U2Net) executed successfully and removed background!")
+        session = new_session("u2netp")
+        out_bytes = remove(img_bytes, session=session)
+        print("Rembg (U2NetP) executed successfully and removed background!")
     except Exception as e:
         print(f"Rembg failed: {e}")
 
