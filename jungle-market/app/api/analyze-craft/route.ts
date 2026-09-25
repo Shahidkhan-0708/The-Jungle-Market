@@ -31,14 +31,25 @@ Return ONLY raw JSON.`;
 
     const imageUrl = image.startsWith("data:") ? image : `data:image/jpeg;base64,${image}`;
 
-    // Pipeline 1: Try Local ML Server First
+    // Pipeline 1: Try Colab / Local ML Server First
+    const colabBaseUrl = (process.env.COLAB_ML_URL || "http://127.0.0.1:8001").replace(/\/$/, "");
+    const colabApiKey = process.env.COLAB_ML_API_KEY || "";
+
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout for local ML
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout for ML server
       
-      const localResponse = await fetch("http://127.0.0.1:8001/analyze", {
+      const mlHeaders: Record<string, string> = {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+      };
+      if (colabApiKey) {
+        mlHeaders["X-ML-API-Key"] = colabApiKey;
+      }
+
+      const localResponse = await fetch(`${colabBaseUrl}/analyze`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: mlHeaders,
         body: JSON.stringify({ image: imageUrl, audio_transcript, user_notes }),
         signal: controller.signal
       });
@@ -46,12 +57,12 @@ Return ONLY raw JSON.`;
 
       if (localResponse.ok) {
         const localData = await localResponse.json();
-        console.log("Successfully analyzed craft using Local ML model.");
+        console.log("Successfully analyzed craft using ML model.");
         return NextResponse.json(localData);
       }
-      throw new Error(`Local ML failed with status ${localResponse.status}`);
+      throw new Error(`ML server failed with status ${localResponse.status}`);
     } catch (e) {
-      console.warn("Local ML failed or timed out. Falling back to Gemini 2.5 API...", e instanceof Error ? e.message : e);
+      console.warn("ML server failed or timed out. Falling back to Gemini 2.5 API...", e instanceof Error ? e.message : e);
     }
 
     // Pipeline 2: Fallback to Gemini via OpenRouter
