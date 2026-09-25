@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import InstallPrompt from "./install-prompt";
 import JungleAssistant from "./jungle-assistant";
+import { LanguageProvider } from "@/lib/i18n";
 
 // 1. CONFIGURE THE PWA HARDWARE INTERFACE THEME
 export const viewport: Viewport = {
@@ -37,7 +38,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}<InstallPrompt /><JungleAssistant /></body>
+      <body className="antialiased">
+        <LanguageProvider>
+          {children}
+          <InstallPrompt />
+          <JungleAssistant />
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

@@ -6,7 +6,9 @@ import { Btn, Badge, money } from './jungle-market';
 
 export default function JungleAssistant() {
   const [isOpen, setIsOpen] = useState(false);
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const [input, setInput] = useState('');
+  const { messages, sendMessage, status } = useChat();
+  const isLoading = status === 'submitted' || status === 'streaming';
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -15,6 +17,13 @@ export default function JungleAssistant() {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    sendMessage({ text: input });
+    setInput('');
+  };
 
   return (
     <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '16px' }}>
@@ -49,67 +58,75 @@ export default function JungleAssistant() {
               </div>
             )}
             
-            {messages.map((m) => (
-              <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                {m.content && (
-                  <div style={{
-                    backgroundColor: m.role === 'user' ? '#1a1a1a' : '#f0f0f0',
-                    color: m.role === 'user' ? 'white' : 'black',
-                    padding: '12px 16px',
-                    borderRadius: '12px',
-                    maxWidth: '85%',
-                    borderBottomRightRadius: m.role === 'user' ? '4px' : '12px',
-                    borderBottomLeftRadius: m.role === 'assistant' ? '4px' : '12px',
-                    lineHeight: '1.5'
-                  }}>
-                    {m.content}
-                  </div>
-                )}
-                
-                {/* Generative UI for Tools */}
-                {m.toolInvocations?.map((toolInvocation) => {
-                  const toolCallId = toolInvocation.toolCallId;
+            {messages.map((m: any) => {
+              const textContent = m.content || m.parts?.filter((p: any) => p.type === 'text').map((p: any) => p.text).join('') || '';
+              const toolInvocations = m.toolInvocations || m.parts?.filter((p: any) => p.type?.startsWith('tool-') || p.type === 'tool-invocation') || [];
+
+              return (
+                <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                  {textContent && (
+                    <div style={{
+                      backgroundColor: m.role === 'user' ? '#1a1a1a' : '#f0f0f0',
+                      color: m.role === 'user' ? 'white' : 'black',
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      maxWidth: '85%',
+                      borderBottomRightRadius: m.role === 'user' ? '4px' : '12px',
+                      borderBottomLeftRadius: m.role === 'assistant' ? '4px' : '12px',
+                      lineHeight: '1.5'
+                    }}>
+                      {textContent}
+                    </div>
+                  )}
                   
-                  if (toolInvocation.toolName === 'searchCrafts') {
-                    if (toolInvocation.state === 'result') {
-                      return (
-                        <div key={toolCallId} style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
-                          <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>Found these crafts:</p>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
-                            {toolInvocation.result.map((craft: any) => (
-                              <article key={craft.id} className="product-card" style={{ margin: 0, padding: '12px' }}>
-                                <div className="product-photo" style={{ height: '140px' }}>
-                                  <img src={craft.image_uri} alt={craft.title} style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-                                  <Badge style={{ top: 8, left: 8 }}><ShieldCheck size={13}/>AI Reviewed</Badge>
-                                </div>
-                                <div style={{ marginTop: '12px' }}>
-                                  <span className="eyebrow" style={{ fontSize: '11px' }}>{craft.category}</span>
-                                  <h4 style={{ margin: '4px 0', fontSize: '15px' }}>{craft.title}</h4>
-                                  <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>by {craft.artisan} · {craft.region}</p>
-                                  <div className="row between" style={{ marginTop: '8px' }}>
-                                    <strong className="price">{money(craft.price)}</strong>
-                                    <Btn tone="ghost" aria-label="View" style={{ padding: '4px 8px' }}><Plus size={16} /></Btn>
+                  {/* Generative UI for Tools */}
+                  {toolInvocations.map((toolInvocation: any, tIdx: number) => {
+                    const toolCallId = toolInvocation.toolCallId || String(tIdx);
+                    const toolName = toolInvocation.toolName || (toolInvocation.type?.replace('tool-', ''));
+                    const isResult = toolInvocation.state === 'result' || toolInvocation.state === 'output-available';
+                    const result = toolInvocation.result || toolInvocation.output;
+                    
+                    if (toolName === 'searchCrafts') {
+                      if (isResult && Array.isArray(result)) {
+                        return (
+                          <div key={toolCallId} style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+                            <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>Found these crafts:</p>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
+                              {result.map((craft: any) => (
+                                <article key={craft.id} className="product-card" style={{ margin: 0, padding: '12px' }}>
+                                  <div className="product-photo" style={{ height: '140px' }}>
+                                    <img src={craft.image_uri} alt={craft.title} style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
+                                    <Badge style={{ top: 8, left: 8 }}><ShieldCheck size={13}/>AI Reviewed</Badge>
                                   </div>
-                                </div>
-                              </article>
-                            ))}
+                                  <div style={{ marginTop: '12px' }}>
+                                    <span className="eyebrow" style={{ fontSize: '11px' }}>{craft.category}</span>
+                                    <h4 style={{ margin: '4px 0', fontSize: '15px' }}>{craft.title}</h4>
+                                    <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>by {craft.artisan} · {craft.region}</p>
+                                    <div className="row between" style={{ marginTop: '8px' }}>
+                                      <strong className="price">{money(craft.price)}</strong>
+                                      <Btn tone="ghost" aria-label="View" style={{ padding: '4px 8px' }}><Plus size={16} /></Btn>
+                                    </div>
+                                  </div>
+                                </article>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div key={toolCallId} style={{ marginTop: '8px', padding: '12px', backgroundColor: '#f9f9f9', borderRadius: '8px', fontSize: '13px', color: '#666', border: '1px dashed #ccc' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <RefreshCw className="animate-spin" size={14} /> Searching Jungle Market...
+                        );
+                      } else {
+                        return (
+                          <div key={toolCallId} style={{ marginTop: '8px', padding: '12px', backgroundColor: '#f9f9f9', borderRadius: '8px', fontSize: '13px', color: '#666', border: '1px dashed #ccc' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <RefreshCw className="animate-spin" size={14} /> Searching Jungle Market...
+                            </div>
                           </div>
-                        </div>
-                      );
+                        );
+                      }
                     }
-                  }
-                  return null;
-                })}
-              </div>
-            ))}
+                    return null;
+                  })}
+                </div>
+              );
+            })}
             {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
               <div style={{ alignSelf: 'flex-start', backgroundColor: '#f0f0f0', padding: '12px 16px', borderRadius: '12px' }}>
                 <span className="dot-typing">...</span>
@@ -122,7 +139,7 @@ export default function JungleAssistant() {
           <form onSubmit={handleSubmit} style={{ padding: '16px', borderTop: '1px solid #eaeaea', display: 'flex', gap: '8px' }}>
             <input
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               placeholder="What are you looking for?"
               style={{ flex: 1, padding: '10px 14px', borderRadius: '24px', border: '1px solid #ccc', outline: 'none' }}
               disabled={isLoading}

@@ -5,7 +5,8 @@ import { z } from 'zod';
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const body: any = await req.json();
+  const messages = body?.messages || [];
 
   const result = streamText({
     model: google('gemini-2.5-pro'),
@@ -14,11 +15,11 @@ export async function POST(req: Request) {
     tools: {
       searchCrafts: tool({
         description: 'Search for crafts based on user query (e.g. category, material, region, price)',
-        parameters: z.object({
+        inputSchema: z.object({
           query: z.string().describe('The search query for crafts'),
           maxPrice: z.number().optional().describe('Maximum price in INR'),
         }),
-        execute: async ({ query, maxPrice }) => {
+        execute: async ({ query, maxPrice }: { query: string; maxPrice?: number }) => {
           // In a real scenario, this would query your /v1/catalog/search endpoint or database.
           // For the SIH demo, we will return some mock rich data to be rendered as UI.
           return [
@@ -46,5 +47,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toDataStreamResponse();
+  return result.toUIMessageStreamResponse();
 }

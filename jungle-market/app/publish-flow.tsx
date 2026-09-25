@@ -11,6 +11,9 @@ import { Draft, SavedCraft, blankDraft, send } from "@/lib/workflow";
 import { publishStages, stageError } from "@/lib/publish-stages";
 import { removeBackgroundClient } from "@/lib/background-remover";
 import VoiceScribe from "@/components/voice-scribe";
+import { toast } from "sonner";
+import { useLanguage, SUPPORTED_LANGUAGES } from "@/lib/i18n";
+import LanguageSelector from "@/components/language-selector";
 
 type Props = {
   step?: number;
@@ -24,6 +27,7 @@ type Props = {
 type StudioBackground = "transparent" | "studio-white" | "warm-parchment" | "forest-sunlight";
 
 export default function PublishFlow({ token = "", craft, onSaved, onClose, step: routeStep, onStep }: Props) {
+  const { language, setLanguage, currentLanguage, t } = useLanguage();
   const [localStep, setLocalStep] = useState(1);
   const step = Math.max(1, Math.min(8, routeStep || localStep));
   const [savedCraft, setSavedCraft] = useState<SavedCraft | undefined>(craft);
@@ -285,7 +289,8 @@ export default function PublishFlow({ token = "", craft, onSaved, onClose, step:
         const rec = new SpeechRec();
         rec.continuous = true;
         rec.interimResults = true;
-        rec.lang = draft.language === "en" ? "en-IN" : draft.language === "ta" ? "ta-IN" : "hi-IN";
+        const activeLangCode = SUPPORTED_LANGUAGES.find(l => l.code === draft.language)?.speechCode || currentLanguage.speechCode || "hi-IN";
+        rec.lang = activeLangCode;
         rec.onresult = (event: any) => {
           let str = "";
           for (let i = 0; i < event.results.length; i++) {
@@ -420,11 +425,14 @@ export default function PublishFlow({ token = "", craft, onSaved, onClose, step:
             <h1>{publishStages[step - 1]}</h1>
           </div>
         </div>
-        {onClose && (
-          <Btn tone="secondary" onClick={onClose}>
-            Back to my crafts
-          </Btn>
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <LanguageSelector />
+          {onClose && (
+            <Btn tone="secondary" onClick={onClose}>
+              {t('my_craft', 'Back to my crafts')}
+            </Btn>
+          )}
+        </div>
       </div>
 
       <progress className="workflow-progress" value={step} max={8} aria-label={`Step ${step} of 8`} />
@@ -609,7 +617,7 @@ export default function PublishFlow({ token = "", craft, onSaved, onClose, step:
                     body: JSON.stringify({ audio_transcript: text })
                   });
                   if (res.ok) {
-                    const data = await res.json();
+                    const data: any = await res.json();
                     update({
                       title: data.title || draft.title,
                       category: data.category || draft.category,
@@ -707,22 +715,20 @@ export default function PublishFlow({ token = "", craft, onSaved, onClose, step:
           <Panel className="stack">
             <h2>Your voice, your story</h2>
             
-            <div className="two-col">
-              <Field label="Spoken language">
-                <select value={draft.language} onChange={(e) => update({ language: e.target.value })}>
-                  {[
-                    ["hi", "हिन्दी (Hindi)"],
-                    ["en", "English"],
-                    ["ta", "தமிழ் (Tamil)"],
-                    ["te", "తెలుగు (Telugu)"],
-                    ["mr", "मराठी (Marathi)"],
-                    ["bn", "বাংলা (Bengali)"],
-                    ["gu", "ગુજરાતી (Gujarati)"],
-                  ].map(([id, name]) => (
-                    <option key={id} value={id}>{name}</option>
+            <div className="two-col" style={{ alignItems: "center" }}>
+              <Field label={t('language', 'Spoken language')}>
+                <select value={draft.language || language} onChange={(e) => {
+                  update({ language: e.target.value });
+                  setLanguage(e.target.value as any);
+                }}>
+                  {SUPPORTED_LANGUAGES.map((l) => (
+                    <option key={l.code} value={l.code}>{l.nativeName} ({l.name}) · {l.region}</option>
                   ))}
                 </select>
               </Field>
+              <div style={{ padding: '10px 14px', background: '#E8F8E7', borderRadius: '10px', fontSize: '13px', color: '#004525', border: '1px solid #A7E3A5' }}>
+                🎙️ <b>{currentLanguage.nativeName}</b>: {t('language_hint', 'Artisans can read, speak, and manage orders in their native mother tongue.')}
+              </div>
             </div>
 
             <div
