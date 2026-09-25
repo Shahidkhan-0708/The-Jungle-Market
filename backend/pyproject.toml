@@ -1,6 +1,6 @@
 [project]
 name = "jungle-market-backend"
-version = "0.1.0"
+version = "0.1.1"
 description = "Production-minded MVP backend for Jungle Market."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -48,6 +48,7 @@ requires = ["setuptools>=72.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["apps*", "jungle_market*"]
 
 [tool.pytest.ini_options]
