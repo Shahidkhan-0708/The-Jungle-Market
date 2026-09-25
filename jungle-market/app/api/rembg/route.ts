@@ -41,8 +41,8 @@ export async function POST(req: NextRequest) {
 
         // Handle Colab JSON response: { clean_bytes_base64: "...", scrubbed_b64: "..." }
         if (contentType.includes("application/json")) {
-          const json = await mlResponse.json();
-          const base64Data = json.clean_bytes_base64 || json.scrubbed_b64;
+          const json = (await mlResponse.json()) as any;
+          const base64Data = json?.clean_bytes_base64 || json?.scrubbed_b64;
           if (base64Data) {
             const buffer = Buffer.from(base64Data, "base64");
             console.log("Successfully removed background using Colab ML model (JSON base64).");

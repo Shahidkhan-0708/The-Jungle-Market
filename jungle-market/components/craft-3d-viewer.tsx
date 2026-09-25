@@ -11,10 +11,17 @@ function Model({ url }: { url: string }) {
 
 function FallbackPot() {
   return (
-    <mesh position={[0, -0.5, 0]} castShadow receiveShadow>
-      <cylinderGeometry args={[0.8, 0.6, 2, 32]} />
-      <meshStandardMaterial color="#b35a3b" roughness={0.8} />
-    </mesh>
+    <group position={[0, -0.6, 0]}>
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[1.2, 0.9, 1.2, 32]} />
+        <meshStandardMaterial color="#d4a373" roughness={0.9} />
+      </mesh>
+      {/* Inner hollow */}
+      <mesh position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[1.15, 0.85, 1.15, 32]} />
+        <meshStandardMaterial color="#4a3b2c" roughness={1} />
+      </mesh>
+    </group>
   );
 }
 

@@ -1,15 +1,20 @@
 import { streamText, tool } from 'ai';
-import { google } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
 import { z } from 'zod';
 
 export const runtime = 'edge';
+
+const openrouter = createOpenAI({
+  baseURL: process.env.FACTORY_API_BASE_URL || 'https://openrouter.ai/api/v1',
+  apiKey: process.env.FACTORY_API_KEY,
+});
 
 export async function POST(req: Request) {
   const body: any = await req.json();
   const messages = body?.messages || [];
 
   const result = streamText({
-    model: google('gemini-2.5-pro'),
+    model: openrouter('meta-llama/llama-3.1-8b-instruct') as any,
     messages,
     system: "You are the Jungle Market AI Guide. Help users discover sustainable and authentic crafts from local artisans. Be concise and friendly. If they ask to see crafts, search for them using your tool.",
     tools: {

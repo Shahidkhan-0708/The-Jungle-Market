@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.69",
+    "@ai-sdk/openai": "^4.0.70",
     "@ai-sdk/react": "^4.0.102",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@hookform/resolvers": "^5.7.1",
