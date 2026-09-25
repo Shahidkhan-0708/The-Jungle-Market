@@ -13,7 +13,7 @@ __pycache__
 logs
 .local_media
 catboost_info
-models
+/models
 test_images
 tests
 Untitled*.ipynb
