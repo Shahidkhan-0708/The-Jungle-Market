@@ -290,6 +290,24 @@ export function AuthScreen({ onAuthenticated }: { onAuthenticated: (session: Aut
             </>}
           </form>
 
+          {mode === "login" && (
+            <div style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(0,0,0,0.1)" }}>
+              <span className="auth-kicker" style={{ marginBottom: "1rem", display: "block" }}>SIH JUDGE DEMO ACCESS</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <button type="button" className="auth-submit" style={{ backgroundColor: "#f9fafb", color: "#111827", border: "1px solid #e5e7eb" }} onClick={() => window.location.assign("/?design=1#buyer/home")}>
+                  <ShoppingBag size={18} /> Enter as Buyer
+                </button>
+                <button type="button" className="auth-submit" style={{ backgroundColor: "#f9fafb", color: "#111827", border: "1px solid #e5e7eb" }} onClick={() => window.location.assign("/?design=1#artisan/home")}>
+                  <Sprout size={18} /> Enter as Artisan
+                </button>
+                <button type="button" className="auth-submit" style={{ backgroundColor: "#f9fafb", color: "#111827", border: "1px solid #e5e7eb" }} onClick={() => window.location.assign("/?design=1#ambassador/home")}>
+                  <ShieldCheck size={18} /> Enter as Field Agent
+                </button>
+              </div>
+            </div>
+          )}
+
+
           <p className="auth-switch">
             {mode === "login" ? "New to Jungle Market?" : "Already have an account?"}{" "}
             <button type="button" onClick={() => switchMode(mode === "login" ? "signup" : "login")}> 
